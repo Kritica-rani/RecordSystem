@@ -9,6 +9,10 @@ const studentController = require("../controller/studentController");
 // router.get("/",(req,res)=>{
 
 // })
+// add student (route/api for creating student)
 router.post("/add", studentController.createStudent);
-
+//recieve id in params
+router.put("/update/:id", studentController.UpdateRecord);
+// end point to delete any student
+router.delete("/delete/:id", studentController.deleteStudentRecord);
 module.exports = router;
