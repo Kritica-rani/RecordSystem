@@ -133,3 +133,60 @@ module.exports.deleteStudentRecord = async (req, res) => {
 //get all --> pagination--> query
 //deleteOne --> delete single document age $gte:5
 //findOneAndDelete--> finds the first document and deletes
+
+// search student by name
+
+module.exports.searchStudentName = async (req, res) => {
+  try {
+    const searchName = req.query.name;
+    console.log("searchName", searchName);
+
+    // find the studentName from db
+    //i --> performs case sensitive search
+    //m--> multiline matching
+    const matchingStudents = await Student.find({
+      name: { $regex: searchName, $options: "i" },
+    });
+    return res.status(200).json({
+      message: "Search result",
+      data: matchingStudents,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Something went wrong while searching",
+      data: {},
+    });
+  }
+};
+
+//get all student records
+
+module.exports.getAllStudentRecords = async (req, res) => {
+  try {
+    //?limit=2
+    console.log("req", req.query);
+    const page = Number(req.query.page).trim() || 1;
+    const limit = req.query.limit || 2;
+    //skip (how many documents do we have to skip)
+    console.log("req", req.query.limit, "limiut-->", limit);
+    const maxLimitApplied = 2;
+    const maxLimit = Math.min(limit, maxLimitApplied);
+    const skip = (page - 1) * limit;
+    // 1-1 *2
+    const totalRecords = await Student.countDocuments({});
+    const data = await Student.find({}).skip(skip).limit(maxLimit);
+
+    // const totalRecords = await Student.find({});
+    return res.status(200).json({
+      totalRecords,
+      page,
+      message: "Fetched all records",
+      data: data,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Something went wrong fetching all records",
+      data: {},
+    });
+  }
+};

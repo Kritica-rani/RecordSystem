@@ -15,4 +15,9 @@ router.post("/add", studentController.createStudent);
 router.put("/update/:id", studentController.UpdateRecord);
 // end point to delete any student
 router.delete("/delete/:id", studentController.deleteStudentRecord);
+// search
+router.get("/searchname", studentController.searchStudentName);
+//get all student records
+router.get("/getall", studentController.getAllStudentRecords);
+
 module.exports = router;
